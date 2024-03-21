@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import os
+import time
+from text_to_speech import text_to_speech ,text_to_audio_segment ,play_audio_segment
 
 def nothing(x):
     pass
@@ -56,15 +58,19 @@ while True:
     u_v = cv2.getTrackbarPos("U - V", "Trackbars")
 
 
-    img = cv2.rectangle(frame, (425,100),(625,300), (0,255,0), thickness=2, lineType=8, shift=0)
-
+    img = cv2.rectangle(frame, (125,100),(325,300), (0,255,0), thickness=2, lineType=8, shift=0)
     lower_blue = np.array([l_h, l_s, l_v])
     upper_blue = np.array([u_h, u_s, u_v])
-    imcrop = img[102:298, 427:623]
+    imcrop = img[102:298, 127:323]
     hsv = cv2.cvtColor(imcrop, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
     
-    cv2.putText(frame, img_text, (30, 400), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 255, 0))
+    cv2.putText(frame, img_text, (30, 400), cv2.FONT_HERSHEY_TRIPLEX, 1.5, (0, 0, 255))
+    # text to sppech - (if you enable it , video will be slow: comment down if you dont want speech)
+    text_to_speech(img_text)
+    # audio_segment = text_to_audio_segment(img_text)
+    # play_audio_segment(audio_segment)
+
     cv2.imshow("test", frame)
     cv2.imshow("mask", mask)
         
@@ -77,7 +83,7 @@ while True:
 
     if cv2.waitKey(1) == 27:
         break
-
+    time.sleep(1)
 
 cam.release()
 cv2.destroyAllWindows()
